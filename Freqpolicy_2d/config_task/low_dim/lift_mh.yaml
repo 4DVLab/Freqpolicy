@@ -1,4 +1,4 @@
-_target_: diffusion_policy.workspace.train_diffusion_unet_lowdim_workspace.TrainDiffusionUnetLowdimWorkspace
+_target_: diffusion_policy.workspace.train_diffusion_far_lowdim_workspace.TrainDiffusionFarLowdimWorkspace
 action_dim: 10
 checkpoint:
   save_last_ckpt: true
@@ -28,21 +28,22 @@ keypoint_visible_rate: 1.0
 logging:
   group: null
   id: null
-  mode: online
-  name: 2023.02.23-19.52.40_train_diffusion_unet_lowdim_lift_lowdim
-  project: diffusion_policy_debug
+  mode: offline
+  project: nips_dp_2025_new
+  entity: xiaochy
+  name: train_diffusion_far_lowdim_lift_mh
   resume: true
   tags:
-  - train_diffusion_unet_lowdim
+  - train_diffusion_far_lowdim
   - lift_lowdim
   - obs_global_rerun
 multi_run:
-  run_dir: data/outputs/2023.02.23/19.52.40_train_diffusion_unet_lowdim_lift_lowdim
-  wandb_name_base: 2023.02.23-19.52.40_train_diffusion_unet_lowdim_lift_lowdim
+  run_dir: data/outputs/2023.02.23/19.52.40_train_diffusion_far_lowdim_lift_lowdim
+  wandb_name_base: 2023.02.23-19.52.40_train_diffusion_far_lowdim_lift_lowdim
 n_action_steps: 8
 n_latency_steps: 0
 n_obs_steps: 2
-name: train_diffusion_unet_lowdim
+name: train_diffusion_far_lowdim
 obs_as_global_cond: true
 obs_as_local_cond: false
 obs_dim: 19
@@ -56,7 +57,7 @@ optimizer:
   weight_decay: 1.0e-06
 past_action_visible: false
 policy:
-  _target_: diffusion_policy.policy.diffusion_unet_lowdim_policy.DiffusionUnetLowdimPolicy
+  _target_: diffusion_policy.policy.diffusion_far_lowdim_policy.DiffusionFarLowdimPolicy
   action_dim: 10
   horizon: 16
   model:
@@ -89,6 +90,25 @@ policy:
   obs_as_local_cond: false
   obs_dim: 19
   pred_action_steps_only: false
+  mask: True
+  mask_ratio_min: 0.7
+  diffloss_d: 3
+  diffloss_w: 1024
+  num_sampling_steps: 'ddim10'
+  diffusion_batch_mul: 1
+  num_iter: 4
+  temperature: 1.0
+  point_feature_dim: 64
+  state_mlp_size: ${policy.obs_dim}
+  encoder_embed_dim: 512
+  decoder_embed_dim: ${policy.encoder_embed_dim}
+  encoder_depth: 4
+  decoder_depth: ${policy.encoder_depth}
+  encoder_num_heads: 8
+  decoder_num_heads: ${policy.encoder_num_heads}
+  use_pc_color: false
+  pointnet_type: "pointnet"
+  cfg: 1
 pred_action_steps_only: false
 task:
   abs_action: true
@@ -157,7 +177,7 @@ training:
   lr_warmup_steps: 500
   max_train_steps: null
   max_val_steps: null
-  num_epochs: 5000
+  num_epochs: 4550
   resume: true
   rollout_every: 50
   sample_every: 5

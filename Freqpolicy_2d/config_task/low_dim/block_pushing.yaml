@@ -1,5 +1,5 @@
 _target_: diffusion_policy.workspace.train_diffusion_far_lowdim_workspace.TrainDiffusionFarLowdimWorkspace
-action_dim: 10
+action_dim: 2
 checkpoint:
   save_last_ckpt: true
   save_last_snapshot: false
@@ -22,31 +22,30 @@ ema:
   power: 0.75
   update_after_step: 0
 exp_name: obs_global_rerun
-horizon: 16
-keypoint_dim: 3
+horizon: 12
+keypoint_dim: 2
 keypoint_visible_rate: 1.0
 logging:
   group: null
   id: null
   mode: offline
-  project: nips_dp_2025_new
-  entity: xiaochy
-  name: train_diffusion_far_lowdim_can_ph
+  name: train_diffusion_far_lowdim_blockpush_lowdim_seed_abs
+  project: diffusion_policy_debug
   resume: true
   tags:
   - train_diffusion_far_lowdim
-  - can_lowdim
+  - blockpush_lowdim_seed_abs
   - obs_global_rerun
 multi_run:
-  run_dir: data/outputs/2023.02.23/19.51.37_train_diffusion_far_lowdim_can_lowdim
-  wandb_name_base: 2023.02.23-19.51.37_train_diffusion_far_lowdim_can_lowdim
+  run_dir: data/outputs/2023.02.25/03.08.13_train_diffusion_far_lowdim_blockpush_lowdim_seed_abs
+  wandb_name_base: 2023.02.25-03.08.13_train_diffusion_far_lowdim_blockpush_lowdim_seed_abs
 n_action_steps: 8
 n_latency_steps: 0
 n_obs_steps: 2
 name: train_diffusion_far_lowdim
 obs_as_global_cond: true
 obs_as_local_cond: false
-obs_dim: 23
+obs_dim: 16
 optimizer:
   _target_: torch.optim.AdamW
   betas:
@@ -58,8 +57,8 @@ optimizer:
 past_action_visible: false
 policy:
   _target_: diffusion_policy.policy.diffusion_far_lowdim_policy.DiffusionFarLowdimPolicy
-  action_dim: 10
-  horizon: 16
+  action_dim: 2
+  horizon: 12
   model:
     _target_: diffusion_policy.model.diffusion.conditional_unet1d.ConditionalUnet1D
     cond_predict_scale: true
@@ -68,8 +67,8 @@ policy:
     - 256
     - 512
     - 1024
-    global_cond_dim: 46
-    input_dim: 10
+    global_cond_dim: 32
+    input_dim: 2
     kernel_size: 5
     local_cond_dim: null
     n_groups: 8
@@ -88,7 +87,7 @@ policy:
   oa_step_convention: true
   obs_as_global_cond: true
   obs_as_local_cond: false
-  obs_dim: 23
+  obs_dim: 16
   pred_action_steps_only: false
   mask: True
   mask_ratio_min: 0.7
@@ -111,62 +110,38 @@ policy:
   cfg: 1
 pred_action_steps_only: false
 task:
-  abs_action: true
-  action_dim: 10
+  action_dim: 2
   dataset:
-    _target_: diffusion_policy.dataset.robomimic_replay_lowdim_dataset.RobomimicReplayLowdimDataset
-    abs_action: true
-    dataset_path: data/robomimic/datasets/can/ph/low_dim_abs.hdf5
-    horizon: 16
-    obs_keys:
-    - object
-    - robot0_eef_pos
-    - robot0_eef_quat
-    - robot0_gripper_qpos
+    _target_: diffusion_policy.dataset.blockpush_lowdim_dataset.BlockPushLowdimDataset
+    horizon: 12
+    obs_eef_target: true
     pad_after: 7
     pad_before: 1
-    rotation_rep: rotation_6d
     seed: 42
-    use_legacy_normalizer: false
+    use_manual_normalizer: false
     val_ratio: 0.02
-  dataset_path: data/robomimic/datasets/can/ph/low_dim_abs.hdf5
-  dataset_type: ph
+    zarr_path: data/block_pushing/multimodal_push_seed_abs.zarr
   env_runner:
-    _target_: diffusion_policy.env_runner.robomimic_lowdim_runner.RobomimicLowdimRunner
+    _target_: diffusion_policy.env_runner.blockpush_lowdim_runner.BlockPushLowdimRunner
     abs_action: true
-    crf: 22
-    dataset_path: data/robomimic/datasets/can/ph/low_dim_abs.hdf5
-    fps: 10
-    max_steps: 400
+    fps: 5
+    max_steps: 350
     n_action_steps: 8
-    n_envs: 28
-    n_latency_steps: 0
+    n_envs: null
     n_obs_steps: 2
     n_test: 50
     n_test_vis: 4
     n_train: 6
     n_train_vis: 2
-    obs_keys:
-    - object
-    - robot0_eef_pos
-    - robot0_eef_quat
-    - robot0_gripper_qpos
+    obs_eef_target: true
     past_action: false
-    render_hw:
-    - 128
-    - 128
     test_start_seed: 100000
-    train_start_idx: 0
-  keypoint_dim: 3
-  name: can_lowdim
-  obs_dim: 23
-  obs_keys:
-  - object
-  - robot0_eef_pos
-  - robot0_eef_quat
-  - robot0_gripper_qpos
-  task_name: can
-task_name: can_lowdim
+    train_start_seed: 0
+  keypoint_dim: 2
+  name: blockpush_lowdim_seed_abs
+  obs_dim: 16
+  obs_eef_target: true
+task_name: blockpush_lowdim_seed_abs
 training:
   checkpoint_every: 50
   debug: false
@@ -176,7 +151,7 @@ training:
   lr_warmup_steps: 500
   max_train_steps: null
   max_val_steps: null
-  num_epochs: 4550
+  num_epochs: 5000
   resume: true
   rollout_every: 50
   sample_every: 5

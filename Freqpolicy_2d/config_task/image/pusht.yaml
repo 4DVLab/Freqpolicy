@@ -1,4 +1,4 @@
-_target_: diffusion_policy.workspace.train_diffusion_unet_hybrid_workspace.TrainDiffusionUnetHybridWorkspace
+_target_: diffusion_policy.workspace.train_diffusion_far_hybrid_workspace.TrainDiffusionFarHybridWorkspace
 checkpoint:
   save_last_ckpt: true
   save_last_snapshot: false
@@ -8,7 +8,7 @@ checkpoint:
     mode: max
     monitor_key: test_mean_score
 dataloader:
-  batch_size: 64
+  batch_size: 256
   num_workers: 8
   persistent_workers: false
   pin_memory: true
@@ -27,21 +27,22 @@ keypoint_visible_rate: 1.0
 logging:
   group: null
   id: null
-  mode: online
-  name: 2023.01.16-20.20.06_train_diffusion_unet_hybrid_pusht_image
-  project: diffusion_policy_debug
+  mode: offline
+  project: nips_dp_2025_new
+  entity: xiaochy
+  name: train_diffusion_far_hybrid_pusht_image
   resume: true
   tags:
-  - train_diffusion_unet_hybrid
+  - train_diffusion_far_hybrid
   - pusht_image
   - default
 multi_run:
-  run_dir: data/outputs/2023.01.16/20.20.06_train_diffusion_unet_hybrid_pusht_image
-  wandb_name_base: 2023.01.16-20.20.06_train_diffusion_unet_hybrid_pusht_image
+  run_dir: data/outputs/2023.01.16/20.20.06_train_diffusion_far_hybrid_pusht_image
+  wandb_name_base: 2023.01.16-20.20.06_train_diffusion_far_hybrid_pusht_image
 n_action_steps: 8
 n_latency_steps: 0
 n_obs_steps: 2
-name: train_diffusion_unet_hybrid
+name: train_diffusion_far_hybrid
 obs_as_global_cond: true
 optimizer:
   _target_: torch.optim.AdamW
@@ -53,7 +54,7 @@ optimizer:
   weight_decay: 1.0e-06
 past_action_visible: false
 policy:
-  _target_: diffusion_policy.policy.diffusion_unet_hybrid_image_policy.DiffusionUnetHybridImagePolicy
+  _target_: diffusion_policy.policy.diffusion_far_hybrid_image_policy.DiffusionFarHybridImagePolicy
   cond_predict_scale: true
   crop_shape:
   - 84
@@ -81,6 +82,25 @@ policy:
   num_inference_steps: 100
   obs_as_global_cond: true
   obs_encoder_group_norm: true
+  pred_action_steps_only: false
+  mask: True
+  mask_ratio_min: 0.7
+  diffloss_d: 3
+  diffloss_w: 1024
+  num_sampling_steps: 'ddim10'
+  diffusion_batch_mul: 1
+  num_iter: 4
+  temperature: 1.0
+  point_feature_dim: 64
+  encoder_embed_dim: 512
+  decoder_embed_dim: ${policy.encoder_embed_dim}
+  encoder_depth: 4
+  decoder_depth: ${policy.encoder_depth}
+  encoder_num_heads: 8
+  decoder_num_heads: ${policy.encoder_num_heads}
+  use_pc_color: false
+  pointnet_type: "pointnet"
+  cfg: 1
   shape_meta:
     action:
       shape:
@@ -175,7 +195,7 @@ training:
   use_ema: true
   val_every: 1
 val_dataloader:
-  batch_size: 64
+  batch_size: 256
   num_workers: 8
   persistent_workers: false
   pin_memory: true

@@ -32,7 +32,6 @@ def main(cfg: OmegaConf):
     OmegaConf.resolve(cfg)
 
     cls = hydra.utils.get_class(cfg._target_)
-    import pdb; pdb.set_trace()
     workspace: BaseWorkspace = cls(cfg)
     workspace.run()
 
