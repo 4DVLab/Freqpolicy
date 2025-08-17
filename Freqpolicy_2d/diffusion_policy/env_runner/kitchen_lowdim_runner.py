@@ -35,7 +35,7 @@ class KitchenLowdimRunner(BaseLowdimRunner):
             max_steps=280,
             n_obs_steps=2,
             n_action_steps=8,
-            render_hw=(1080,1080),
+            render_hw=(240,360),
             fps=12.5,
             crf=22,
             past_action=False,

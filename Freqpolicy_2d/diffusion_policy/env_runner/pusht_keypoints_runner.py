@@ -216,26 +216,7 @@ class PushTKeypointsRunner(BaseLowdimRunner):
 
                 # run policy
                 with torch.no_grad():
-                    # 添加计时逻辑
-                    if not hasattr(self, 'inference_times'):
-                        self.inference_times = []
-                    import time
-                    # 测量单次推理时间
-                    start_time = time.time()
                     action_dict = policy.predict_action(obs_dict)
-                    end_time = time.time()
-                    inference_time = end_time - start_time
-                    
-                    # 收集推理时间
-                    self.inference_times.append(inference_time)
-                    
-                    # 如果收集了100次或更多，计算并打印平均时间
-                    if len(self.inference_times) == 100:
-                        avg_time = sum(self.inference_times) / 100
-                        print(f"100次推理的平均时间: {avg_time:.6f} 秒")
-                        print(f"推理时间列表: {self.inference_times}")
-                    elif len(self.inference_times) < 100:
-                        print(f"第 {len(self.inference_times)} 次推理时间: {inference_time:.6f} 秒")
 
                 # device_transfer
                 np_action_dict = dict_apply(action_dict,

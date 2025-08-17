@@ -9,7 +9,7 @@ class PushTKeypointsEnv(PushTEnv):
             legacy=False,
             block_cog=None, 
             damping=None,
-            render_size=1,
+            render_size=96,
             keypoint_visible_rate=1.0, 
             agent_keypoints=False,
             draw_keypoints=False,

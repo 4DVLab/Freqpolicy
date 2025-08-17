@@ -39,7 +39,7 @@ class PushTEnv(gym.Env):
         self._seed = None
         self.seed()
         self.window_size = ws = 512  # The size of the PyGame window
-        self.render_size = 512
+        self.render_size = render_size
         self.sim_hz = 100
         # Local controller params.
         self.k_p, self.k_v = 100, 20    # PD control.z
@@ -220,9 +220,9 @@ class PushTEnv(gym.Env):
         if self.render_action:
             if self.render_action and (self.latest_action is not None):
                 action = np.array(self.latest_action)
-                coord = (action / 512 * self.render_size).astype(np.int32)
-                marker_size = int(8/self.render_size*self.render_size)
-                thickness = int(1/self.render_size*self.render_size)
+                coord = (action / 512 * 96).astype(np.int32)
+                marker_size = int(8/96*self.render_size)
+                thickness = int(1/96*self.render_size)
                 cv2.drawMarker(img, coord,
                     color=(255,0,0), markerType=cv2.MARKER_CROSS,
                     markerSize=marker_size, thickness=thickness)

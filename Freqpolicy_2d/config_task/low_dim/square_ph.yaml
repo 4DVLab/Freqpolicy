@@ -114,7 +114,7 @@ task:
   abs_action: true
   action_dim: 10
   dataset:
-    _target_: Freqpolicy.dataset.robomimic_replay_lowdim_dataset.RobomimicReplayLowdimDataset
+    _target_: diffusion_policy.dataset.robomimic_replay_lowdim_dataset.RobomimicReplayLowdimDataset
     abs_action: true
     dataset_path: data/robomimic/datasets/square/ph/low_dim_abs.hdf5
     horizon: 16
@@ -132,7 +132,7 @@ task:
   dataset_path: data/robomimic/datasets/square/ph/low_dim_abs.hdf5
   dataset_type: ph
   env_runner:
-    _target_: Freqpolicy.env_runner.robomimic_lowdim_runner.RobomimicLowdimRunner
+    _target_: diffusion_policy.env_runner.robomimic_lowdim_runner.RobomimicLowdimRunner
     abs_action: true
     crf: 22
     dataset_path: data/robomimic/datasets/square/ph/low_dim_abs.hdf5
