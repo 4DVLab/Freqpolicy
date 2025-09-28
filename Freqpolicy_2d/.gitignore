@@ -4,7 +4,7 @@ wandb
 outputs
 data
 data_local
-wandb_sync
+wandb_sync/
 .vscode
 _wandb
 
