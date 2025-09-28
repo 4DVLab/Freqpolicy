@@ -1,4 +1,4 @@
-_target_: diffusion_policy.workspace.train_diffusion_unet_hybrid_workspace.TrainDiffusionUnetHybridWorkspace
+_target_: diffusion_policy.workspace.train_diffusion_far_hybrid_workspace.TrainDiffusionFarHybridWorkspace
 checkpoint:
   save_last_ckpt: true
   save_last_snapshot: false
@@ -8,7 +8,7 @@ checkpoint:
     mode: max
     monitor_key: test_mean_score
 dataloader:
-  batch_size: 64
+  batch_size: 256
   num_workers: 8
   persistent_workers: false
   pin_memory: true
@@ -30,19 +30,19 @@ logging:
   entity: xiaochy
   project: nips_dp_2025
   mode: offline
-  name: 2022.12.28-22.49.46_train_diffusion_unet_hybrid_can_image
+  name: train_diffusion_far_hybrid_can_image
   resume: true
   tags:
-  - train_diffusion_unet_hybrid
+  - train_diffusion_far_hybrid
   - can_image
   - default
 multi_run:
-  run_dir: data/outputs/2022.12.28/22.49.46_train_diffusion_unet_hybrid_can_image
-  wandb_name_base: 2022.12.28-22.49.46_train_diffusion_unet_hybrid_can_image
+  run_dir: data/outputs/2022.12.28/22.49.46_train_diffusion_far_hybrid_can_image
+  wandb_name_base: 2022.12.28-22.49.46_train_diffusion_far_hybrid_can_image
 n_action_steps: 8
 n_latency_steps: 0
 n_obs_steps: 2
-name: train_diffusion_unet_hybrid
+name: train_diffusion_far_hybrid
 obs_as_global_cond: true
 optimizer:
   _target_: torch.optim.AdamW
@@ -54,7 +54,7 @@ optimizer:
   weight_decay: 1.0e-06
 past_action_visible: false
 policy:
-  _target_: diffusion_policy.policy.diffusion_unet_hybrid_image_policy.DiffusionUnetHybridImagePolicy
+  _target_: diffusion_policy.policy.diffusion_far_hybrid_image_policy.DiffusionFarHybridImagePolicy
   cond_predict_scale: true
   crop_shape:
   - 76
@@ -268,7 +268,7 @@ training:
   use_ema: true
   val_every: 1
 val_dataloader:
-  batch_size: 64
+  batch_size: 256
   num_workers: 8
   persistent_workers: false
   pin_memory: true

@@ -30,7 +30,7 @@ logging:
   mode: offline
   project: nips_dp_2025_new
   entity: xiaochy
-  name: rain_diffusion_far_hybrid_square_image_ph
+  name: train_diffusion_far_hybrid_square_image_ph
   resume: true
   tags:
   - train_diffusion_far_hybrid
