@@ -80,7 +80,25 @@ python eval.py \
   --checkpoint data/outputs/21.35.20_train_freqpolicy_lowdim_pusht_lowdim/checkpoints/xxxx.ckpt \
   -o data/pusht_eval_output
 ```
+### 🎯 3D Version
 
+Navigate to the `Freqpolicy_3d/` directory:
+
+#### Training
+
+**Step 1: Generate Training Data**
+```bash
+cd Freqpolicy_3d
+python scripts/gen_xxx.py  # Use the appropriate generation script
+```
+**Step 2: Train Policy**
+```bash
+bash scripts/train_policy.sh Freqpolicy adroit_pen 0428 0 0
+```
+#### Evaluation
+```bash
+bash scripts/eval_policy.sh Freqpolicy adroit_pen 0428 0 0
+```
 <!-- --- -->
 
 
