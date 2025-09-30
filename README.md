@@ -54,39 +54,33 @@ Our method provides separate implementations for 2D and 3D inputs, built upon ex
 
 Please navigate to the corresponding directory and follow its README for detailed installation instructions.
 
-### Train
+## 🚀 Training & Evaluation
 
-- Train with a single GPU
+Both 2D and 3D versions support all methods from their respective original repositories.
 
-    ```bash
-    bash scripts/grasp_gen_ur/train.sh ${EXP_NAME}
-    ```
+---
 
-- Train with multiple GPUs
+### 📦 2D Version
 
-    ```bash
-    bash scripts/grasp_gen_ur/train_ddm.sh ${EXP_NAME}
-    ```
+Navigate to the `Freqpolicy_2d/` directory:
 
-### Sample
-
+#### Training
 ```bash
-bash scripts/grasp_gen_ur/sample.sh ${exp_dir} [OPT]
-# e.g., Running without Physics-Guided Sampling:   bash scripts/grasp_gen_ur/sample.sh /outputs/exp_dir [OPT]
-# e.g., Running with Physics-Guided Sampling:   bash scripts/grasp_gen_ur/sample.sh /outputs/exp_dir OPT
+cd Freqpolicy_2d
+
+# Single run
+sh train.sh
+
+# Multi-run (for hyperparameter tuning)
+sh train_multirun.sh
 ```
-- `[OPT]` is an optional parameter for Physics-Guided Sampling.
-
-### Test 
-
-First, you need to run `scripts/grasp_gen_ur/sample.sh` to sample some results. 
-You also need to set the dataset file paths in `/envs/tasks/grasp_test_force_shadowhand.py` and /scripts/grasp_gen_ur/test.py`. 
-Then, we will compute quantitative metrics using these sampled results.
-
+#### Evaluation
 ```bash
-bash scripts/grasp_gen_ur/test.sh ${EVAL_DIR} 
-# e.g., bash scripts/grasp_gen_ur/test.sh  /outputs/exp_dir/eval/final/2025-03-16_19-15-31
+python eval.py \
+  --checkpoint data/outputs/21.35.20_train_freqpolicy_lowdim_pusht_lowdim/checkpoints/xxxx.ckpt \
+  -o data/pusht_eval_output
 ```
+
 <!-- --- -->
 
 
