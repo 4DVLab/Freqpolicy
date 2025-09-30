@@ -39,42 +39,20 @@ Please refer to our [homepage](https://freq-policy.github.io/) for more thrillin
 
 
 ## 🛠️ Setup
-- 1. Create a new `conda` environemnt and activate it.（My CUDA version (nvcc --version) is 11.7）
 
-    ```bash
-    conda create -n DGA python=3.8
-    conda activate DGA
-    pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 --extra-index-url https://download.pytorch.org/whl/cu113
-    ```
+Our method provides separate implementations for 2D and 3D inputs, built upon existing frameworks:
 
-- 2. Install the required packages.
-    You can change TORCH_CUDA_ARCH_LIST according to your GPU architecture.
-    ```bash
-    TORCH_CUDA_ARCH_LIST="7.0;7.5;8.0;8.6" pip install -r requirements.txt
-    ```
-    Please install in an environment with a GPU, otherwise it will error.
-    ```bash
-    cd src
-    git clone https://github.com/wrc042/CSDF.git
-    cd CSDF
-    pip install -e .
-    cd ..
-    git clone https://github.com/facebookresearch/pytorch3d.git
-    cd pytorch3d
-    git checkout tags/v0.7.2  
-    FORCE_CUDA=1  TORCH_CUDA_ARCH_LIST="7.5;8.0;8.6"  python setup.py install
-    cd ..
-    ```
-- 3. Install the Isaac Gym
-    Follow the [official installation guide](https://developer.nvidia.com/isaac-gym) to install Isaac Gym and its dependencies.
-    You will get a folder named `IsaacGym_Preview_4_Package.tar.gz` put it in ./src/IsaacGym_Preview_4_Package.tar.gz
-    ```bash
-    tar -xzvf IsaacGym_Preview_4_Package.tar.gz
-    cd isaacgym/python
-    pip install -e .
-    ```
+- 📁 **2D Version** → [`Freqpolicy_2d/`](Freqpolicy_2d/)
+  - Based on [Diffusion Policy (DP)](https://github.com/real-stanford/diffusion_policy) framework
+  - Follow the environment setup in DP and complete a few additional installation steps
+  - See [Freqpolicy_2d/README.md](Freqpolicy_2d/README.md) for details
 
-Before training and testing, please ensure that you set the dataset path, model size, whether to use LLM, sampling method, and other parameters in `configs`.
+- 📁 **3D Version** → [`Freqpolicy_3d/`](Freqpolicy_3d/)
+  - Based on [DP3](https://github.com/YanjieZe/3D-Diffusion-Policy) framework
+  - Follow the environment setup in DP3 and complete a few additional installation steps
+  - See [Freqpolicy_3d/README.md](Freqpolicy_3d/README.md) for details
+
+Please navigate to the corresponding directory and follow its README for detailed installation instructions.
 
 ### Train
 
