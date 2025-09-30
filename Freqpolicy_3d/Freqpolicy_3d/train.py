@@ -24,7 +24,7 @@ import shutil
 import time
 import threading
 from hydra.core.hydra_config import HydraConfig
-from diffusion_policy_3d.policy.dp3 import DP3
+from diffusion_policy_3d.policy.Freqpolicy3d import Freqpolicy3d
 from diffusion_policy_3d.dataset.base_dataset import BaseDataset
 from diffusion_policy_3d.env_runner.base_runner import BaseRunner
 from diffusion_policy_3d.common.checkpoint_util import TopKCheckpointManager
@@ -34,7 +34,7 @@ from diffusion_policy_3d.model.common.lr_scheduler import get_scheduler
 
 OmegaConf.register_new_resolver("eval", eval, replace=True)
 
-class TrainDP3Workspace:
+class TrainFreqpolicyWorkspace:
     include_keys = ['global_step', 'epoch']
     exclude_keys = tuple()
 
@@ -50,9 +50,9 @@ class TrainDP3Workspace:
         random.seed(seed)
 
         # configure model
-        self.model: DP3 = hydra.utils.instantiate(cfg.policy)
+        self.model: Freqpolicy3d = hydra.utils.instantiate(cfg.policy)#DP3 and Freqpolicy all can be used
 
-        self.ema_model: DP3 = None
+        self.ema_model: Freqpolicy3d = None #DP3 and Freqpolicy all can be used
         if cfg.training.use_ema:
             try:
                 self.ema_model = copy.deepcopy(self.model)
@@ -499,7 +499,7 @@ class TrainDP3Workspace:
         'diffusion_policy_3d', 'config'))
 )
 def main(cfg):
-    workspace = TrainDP3Workspace(cfg)
+    workspace = TrainFreqpolicyWorkspace(cfg)
     workspace.run()
 
 if __name__ == "__main__":

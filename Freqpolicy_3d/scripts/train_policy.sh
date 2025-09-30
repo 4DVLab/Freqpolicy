@@ -1,9 +1,7 @@
 # Examples:
-# bash scripts/train_policy.sh dp3 adroit_hammer 0322 0 0
-# bash scripts/train_policy.sh Freqpolicy metaworld_pick-place-wall 0502_new1 0 0
-# bash scripts/train_policy.sh dp3 dexart_laptop 0322 0 0
-# bash scripts/train_policy.sh simple_dp3 adroit_hammer 0322 0 0
-# bash scripts/train_policy.sh dp3 metaworld_basketball 0602 0 0
+# bash scripts/train_policy.sh Freqpolicy adroit_pen 0428 0 0
+# bash scripts/train_policy.sh dp3 adroit_pen 0428 0 0
+# bash scripts/train_policy.sh simple_dp3 adroit_pen 0428 0 0
 
 
 
@@ -15,7 +13,6 @@ task_name=${2}
 config_name=${alg_name}
 addition_info=${3}
 seed=${4}
-cfg=${5}
 exp_name=${task_name}-${alg_name}-${addition_info}
 run_dir="data/outputs/${exp_name}_seed${seed}"
 
@@ -37,12 +34,12 @@ else
     echo -e "\033[33mTrain mode\033[0m"
 fi
 
-cd 3D-Diffusion-Policy
+cd Freqpolicy_3d
 
 
 export HYDRA_FULL_ERROR=1 
 export CUDA_VISIBLE_DEVICES=${gpu_id}
-python train_Freqpolicy.py --config-name=${config_name}.yaml \
+python train.py --config-name=${config_name}.yaml \
                             task=${task_name} \
                             hydra.run.dir=${run_dir} \
                             training.debug=$DEBUG \
@@ -51,9 +48,7 @@ python train_Freqpolicy.py --config-name=${config_name}.yaml \
                             exp_name=${exp_name} \
                             logging.mode=${wandb_mode} \
                             checkpoint.save_ckpt=${save_ckpt} \
-                            wandb_name=${task_name}_${addition_info} \
-                            policy.cfg=${cfg}
-
+                            wandb_name=${task_name}_${addition_info} 
 
 
                                 

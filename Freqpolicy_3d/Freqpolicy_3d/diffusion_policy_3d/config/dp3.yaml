@@ -6,7 +6,8 @@ name: train_dp3
 task_name: ${task.name}
 shape_meta: ${task.shape_meta}
 exp_name: "debug"
-wandb_name: "freqpolicy_debug"
+wandb_name: "dp3_debug"
+
 # horizon: 4
 horizon: 16
 n_obs_steps: 2

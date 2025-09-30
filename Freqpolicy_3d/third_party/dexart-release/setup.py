@@ -14,6 +14,6 @@ setup(
     license='',
     author="Xiaolong Wang's Lab",
     install_requires=[
-        'transforms3d', 'sapien==2.2.1', 'numpy', 'open3d>=0.13.0'
+        'transforms3d', 'sapien==2.2.1', 'numpy', 'open3d>=0.15.1'
     ],
 )

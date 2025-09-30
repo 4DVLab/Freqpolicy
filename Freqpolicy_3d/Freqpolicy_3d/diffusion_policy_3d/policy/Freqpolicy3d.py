@@ -28,7 +28,7 @@ import torch.nn.functional as F
 from diffusion_policy_3d.models.Freqpolicy import Freqpolicy
 from functools import partial
 
-class Freqpolicy(BasePolicy):
+class Freqpolicy3d(BasePolicy):
     def __init__(self, 
             shape_meta: dict,
             horizon, 
@@ -115,19 +115,13 @@ class Freqpolicy(BasePolicy):
         self.kwargs = kwargs
         self.mask_ratio_min = mask_ratio_min
         self.loss_weight = loss_weight
-        self.mask = mask # 是否使用mask
+        self.mask = mask 
         self.diffloss_d = diffloss_d
         self.diffloss_w = diffloss_w
         self.num_sampling_steps = num_sampling_steps
         self.diffusion_batch_mul = diffusion_batch_mul
-        self.temperature = temperature  # 采样温度
-        self.num_iter = num_iter  # 采样步数
-        ####################use VAE TODO####################
-        # self.vae = AutoencoderKL()
-        # for param in self.vae.parameters():
-        #     param.requires_grad = True
-        ####################################################
-        print(f"创建模型，参数：action_dim={action_dim}, obs_feature_dim={obs_feature_dim if self.obs_as_global_cond else None}")
+        self.temperature = temperature  # Sampling temperature
+        self.num_iter = num_iter  
         self.model = Freqpolicy(
             trajectory_dim=self.action_dim,
             horizon=self.horizon,

@@ -13,7 +13,7 @@ import torch
 import dill
 from omegaconf import OmegaConf
 import pathlib
-from train_Freqpolicy import TrainFreqpolicyWorkspace
+from train import TrainFreqpolicyWorkspace
 
 OmegaConf.register_new_resolver("eval", eval, replace=True)
     

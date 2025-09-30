@@ -7,6 +7,7 @@ name: train_simple_dp3
 task_name: ${task.name}
 shape_meta: ${task.shape_meta}
 exp_name: "debug"
+wandb_name: "dp3_debug"
 
 # horizon: 4
 horizon: 16
@@ -124,7 +125,7 @@ logging:
   group: ${exp_name}
   id: null
   mode: online
-  name: ${training.seed}
+  name: ${wandb_name}
   project: dp3
   resume: true
   tags:

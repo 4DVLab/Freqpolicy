@@ -1,6 +1,7 @@
 # use the same command as training except the script
 # for example:
-# bash scripts/eval_policy.sh Freqpolicy adroit_hammer best_modeltest_mastakeforget+1_inter4 0 0
+# bash scripts/eval_policy.sh Freqpolicy adroit_pen 0428 0 0
+# bash scripts/eval_policy.sh dp3 adroit_pen 0428 0 0
 
 
 
@@ -13,21 +14,10 @@ addition_info=${3}
 seed=${4}
 exp_name=${task_name}-${alg_name}-${addition_info}
 run_dir="data/outputs/${exp_name}_seed${seed}"
-
 gpu_id=${5}
+wandb_mode=offline
 
-if [ $DEBUG = True ]; then
-    wandb_mode=offline
-    # wandb_mode=online
-    echo -e "\033[33mDebug mode!\033[0m"
-    echo -e "\033[33mDebug mode!\033[0m"
-    echo -e "\033[33mDebug mode!\033[0m"
-else
-    wandb_mode=offline
-    # wandb_mode=online
-    echo -e "\033[33mTrain mode\033[0m"
-fi
-cd 3D-Diffusion-Policy
+cd Freqpolicy_3d
 
 export HYDRA_FULL_ERROR=1
 export CUDA_VISIBLE_DEVICES=${gpu_id}

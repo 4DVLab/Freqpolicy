@@ -18,7 +18,7 @@ keypoint_visible_rate: 1.0
 obs_as_global_cond: True
 
 policy:
-  _target_: diffusion_policy_3d.policy.Freqpolicy.Freqpolicy
+  _target_: diffusion_policy_3d.policy.Freqpolicy3d.Freqpolicy3d
   use_point_crop: true
   condition_type: film
   crop_shape:
