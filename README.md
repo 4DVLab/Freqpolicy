@@ -60,7 +60,7 @@ Both 2D and 3D versions support all methods from their respective original repos
 
 ---
 
-### 📦 2D Version
+### 2D Version
 
 Navigate to the `Freqpolicy_2d/` directory:
 
@@ -80,7 +80,7 @@ python eval.py \
   --checkpoint data/outputs/21.35.20_train_freqpolicy_lowdim_pusht_lowdim/checkpoints/xxxx.ckpt \
   -o data/pusht_eval_output
 ```
-### 🎯 3D Version
+### 3D Version
 
 Navigate to the `Freqpolicy_3d/` directory:
 
