@@ -418,7 +418,7 @@ class AdroitEnv:
 
     def render(self, mode):
         assert mode == 'rgb_array'
-        img = self.get_pixels_with_width_height(480, 480)
+        img = self.get_pixels_with_width_height(84, 84)
         # make it channel last
         img = np.transpose(img, (1, 2, 0))  # it has been 0-255
         # (84, 84, 3), uint8, 0-255

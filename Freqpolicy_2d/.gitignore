@@ -7,7 +7,7 @@ data_local
 wandb_sync/
 .vscode
 _wandb
-
+trainall.sh
 **/.DS_Store
 
 fuse.cfg

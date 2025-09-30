@@ -20,13 +20,12 @@ from diffusion_policy_3d.util.misc import NativeScalerWithGradNormCount as Nativ
 from diffusion_policy_3d.model.common.normalizer import LinearNormalizer
 from diffusion_policy_3d.common.pytorch_util import dict_apply
 from diffusion_policy_3d.policy.base_policy import BasePolicy
-from diffusion_policy_3d.models.vae import AutoencoderKL
-from diffusion_policy_3d.models import far_ours
+from diffusion_policy_3d.models import Freqpolicy
 from diffusion_policy_3d.model.vision.pointnet_extractor import DP3Encoder
 from termcolor import cprint
 import torch.nn as nn
 import torch.nn.functional as F
-from diffusion_policy_3d.models.far_ours import FAR
+from diffusion_policy_3d.models.Freqpolicy import Freqpolicy
 from functools import partial
 
 class Freqpolicy(BasePolicy):
@@ -129,9 +128,7 @@ class Freqpolicy(BasePolicy):
         #     param.requires_grad = True
         ####################################################
         print(f"创建模型，参数：action_dim={action_dim}, obs_feature_dim={obs_feature_dim if self.obs_as_global_cond else None}")
-        # 直接实例化FAR类，而不是通过Freqpolicy_base函数
-        
-        self.model = FAR(
+        self.model = Freqpolicy(
             trajectory_dim=self.action_dim,
             horizon=self.horizon,
             n_obs_steps=self.n_obs_steps,
@@ -231,17 +228,13 @@ class Freqpolicy(BasePolicy):
             cond_data[:,:To,Da:] = nobs_features
             cond_mask[:,:To,Da:] = True
 
-        # run sampling
-        import time
-        start_time = time.time()
+
         nsample = self.conditional_sample(
             cond_data, 
             cond_mask,
             local_cond=local_cond,
             global_cond=global_cond,
             **self.kwargs)
-        end_time = time.time()
-        # print(f"采样时间: {end_time - start_time} 秒")
         
         # unnormalize prediction
         naction_pred = nsample[...,:Da]
