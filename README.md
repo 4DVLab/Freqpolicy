@@ -29,7 +29,13 @@
   <a href="https://freq-policy.github.io/"><b>📖 Project Page</b></a> |
   <a href="https://arxiv.org/pdf/2506.01583"><b>📄 Paper Link</b></a> |
 </p>
+</div>
 
+>  We present DexGrasp Anything, consistently surpassing previous dexterous grasping generation methods across five benchmarks. Visualization of our method's results are shown on the left.
+
+<div align="center">
+    <img src="image.png" alt="Directional Weight Score" class="blend-img-background center-image" style="max-width: 100%; height: auto;" />
+</div>
 
 ## 📣 News
 - [2/27/2025] 🎉🎉🎉FreqPolicy has been accepted by NeurIPS 2025!!!🎉🎉🎉
@@ -89,7 +95,7 @@ Navigate to the `Freqpolicy_3d/` directory:
 **Step 1: Generate Training Data**
 ```bash
 cd Freqpolicy_3d
-python scripts/gen_xxx.py  # Use the appropriate generation script
+python scripts/gen_xxx.py 
 ```
 **Step 2: Train Policy**
 ```bash
