@@ -77,7 +77,7 @@ cd Freqpolicy_2d
 # Single run
 sh train.sh
 
-# Multi-run (for hyperparameter tuning)
+# Multi-run
 sh train_multirun.sh
 ```
 #### Evaluation
