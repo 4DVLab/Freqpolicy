@@ -26,48 +26,17 @@
   
 
 <p align="center">
-  <a href="https://dexgraspanything.github.io/"><b>📖 Project Page</b></a> |
-  <a href="https://arxiv.org/pdf/2503.08257"><b>📄 Paper Link</b></a> |
+  <a href="https://freq-policy.github.io/"><b>📖 Project Page</b></a> |
+  <a href="https://arxiv.org/pdf/2506.01583"><b>📄 Paper Link</b></a> |
 </p>
 
-</div>
-
->  We present DexGrasp Anything, consistently surpassing previous dexterous grasping generation methods across five benchmarks. Visualization of our method's results are shown on the left.
-
-<div align="center">
-    <img src="image1.png" alt="Directional Weight Score" class="blend-img-background center-image" style="max-width: 100%; height: auto;" />
-</div>
 
 ## 📣 News
-- [2/27/2025] 🎉🎉🎉DexGraspAnything has been accepted by CVPR 2025!!!🎉🎉🎉
+- [2/27/2025] 🎉🎉🎉FreqPolicy has been accepted by NeurIPS 2025!!!🎉🎉🎉
 
 ## 😲 Results
-Please refer to our [homepage](https://dexgraspanything.github.io/) for more thrilling results!
+Please refer to our [homepage](https://freq-policy.github.io/) for more thrilling results!
 
-# 📚 Datasets
-
-In our data processing, the rotation and translation formula is \( Y = a(x + b) \), where \( Y \) represents the shadow hand after rotation and translation, and \( x \) is the original hand. It is important to emphasize that we use \( Y = a(x + b) \) rather than \( Y = ax + b \). This formulation allows us to conveniently transfer the rotation to the object, i.e., \(O = a^T * O \), enabling more flexible manipulation.
-
-| **Datasets** | **Huggingface link** | **Google drive Link (Format Compatible with Our Dataloader)** | **Paper** |
-|:---:|:---:|:---:|:---:|
-| **DGA** | [Huggingface](https://huggingface.co/datasets/GaussionZhong/DexGrasp-Anything/resolve/main/Dexgraspanyting.tar.gz) | [Datasets](https://drive.google.com/file/d/1of-m2qxVqgWf-nHV6oVHPk1z4NWVrEPV/view?usp=drive_link) | ✅[DexGrasp Anything: Towards Universal Robotic Dexterous Grasping with Physics Awareness](https://arxiv.org/pdf/2503.08257) |
-| *Realdex*           | [Huggingface](https://huggingface.co/datasets/GaussionZhong/DexGrasp-Anything/resolve/main/Realdex.zip) | [Datasets](https://drive.google.com/file/d/12rgyyKg07PmY6jzl7pMocA4o5ikLFuOA/view)                     | ✅[RealDex: Towards Human-like Grasping for Robotic Dexterous Hand](https://arxiv.org/abs/2402.13853)                                                    |
-| *DexGraspNet*          | [Huggingface](https://huggingface.co/datasets/GaussionZhong/DexGrasp-Anything/resolve/main/DexGraspNet.zip) | [Datasets](https://drive.google.com/file/d/1FHJxEDl2jegOpq-g4KZ4eEVvM3gqDQCh/view)                     | ✅[DexGraspNet: A Large-Scale Robotic Dexterous Grasp Dataset for General Objects Based on Simulation](https://arxiv.org/abs/2210.02697)                                                    |
-| *UniDexGrasp*           | [Huggingface](https://huggingface.co/datasets/GaussionZhong/DexGrasp-Anything/resolve/main/UniDexGrasp.zip) | [Datasets](https://drive.google.com/file/d/1-nPUP14x0VOfIqQwYU-hc-WhUaPBxEQ7/view)                     | ✅[UniDexGrasp: Universal Robotic Dexterous Grasping via Learning Diverse Proposal Generation and Goal-Conditioned Policy](https://arxiv.org/abs/2303.00938)                                                    |
-| *MultiDex*             | [Huggingface](https://huggingface.co/datasets/GaussionZhong/DexGrasp-Anything/resolve/main/MultiDex_UR.zip) | [Datasets](https://drive.google.com/file/d/1wHdWLfvxWjpFBV_Ld-j4DwNXAr1UMERf/view)                     | ✅[GenDexGrasp: Generalizable Dexterous Grasping](https://arxiv.org/abs/2210.00722)                                                    |
-| *DexGRAB(Retargeting from Grab)*            | [Huggingface](https://huggingface.co/datasets/GaussionZhong/DexGrasp-Anything/resolve/main/DexGRAB.zip) | [Datasets](https://drive.google.com/file/d/1Xmgw-c3lrkab2NIs_1i0Hq95I0Y4Sp8n/view)                     | ✅[Grab: A dataset of whole-body human grasping of objects.](https://arxiv.org/abs/2008.11200)                                                    |
-
-# 🦾 Make your own dataset
-- First, your dataset should contain mesh files of objects. You can create an `object_pcds_nors.pkl` file by sampling point clouds from these meshes. Modify the paths in `Process_your_dataset/make_obj_pcds.py` to build your dataset.
-    ```bash
-    python Process_your_dataset/make_obj_pcds.py
-    ```
-- Based on your data pose format (such as translation, rotation, qpose, scale), `create a corresponding .pt file`. You can refer to the input examples in the datasets folder to build it. You need to understand the pose format of your dataset. Pay special attention to whether the translation, rotation, and scale are applied to the object point cloud or to the robotic hand. You can also modify your dataloader to ensure that the input poses and object point cloud data visualize correctly.
-
-- During the testing phase, you need to generate a URDF file for all meshes. You can use `Process_your_dataset/make_obj_urdf.py` to generate them (recommended to place in the same directory level as the mesh files).
-    ```bash
-    python Process_your_dataset/make_obj_urdf.py
-    ```
 
 ## 🛠️ Setup
 - 1. Create a new `conda` environemnt and activate it.（My CUDA version (nvcc --version) is 11.7）
