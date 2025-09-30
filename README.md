@@ -3,7 +3,7 @@
 <h1 align="center"><strong> FreqPolicy: Frequency Autoregressive Visuomotor Policy with Continuous Tokens
 </strong></h1>
   <p align="center">
-      <strong><span style="color: red;">NIPS 2025</span></strong>
+      <strong><span style="color: red;">NeurIPS 2025</span></strong>
     <br>
    <a href='https://ymzhong66.github.io' target='_blank'>Yiming Zhong</a>&emsp;
    <a href='https://lym29.github.io/' target='_blank'>Yumeng Liu</a>&emsp;
@@ -15,15 +15,11 @@
    <a href='https://yujingsun.github.io/' target='_blank'>Yujing Sun</a>&emsp;
    <a href='https://xingezhu.me/aboutme.html' target='_blank'>Xinge Zhu</a>&emsp;
    <a href='https://yuexinma.me' target='_blank'>Yuexin Ma</a>&emsp;
-    <br>
-    ShanghaiTech University
-    <br>
-    The University of Hong Kong
-    <br>
-    Nanyang Technological University
-    <br>
-    The Chinese University of Hong Kong    
-    <br>
+  <br><br>
+  <sup>1</sup>ShanghaiTech University&emsp;
+  <sup>2</sup>The University of Hong Kong<br>
+  <sup>3</sup>Nanyang Technological University&emsp;
+  <sup>4</sup>The Chinese University of Hong Kong
   </p>
 </p>
 
