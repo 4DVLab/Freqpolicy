@@ -17,10 +17,12 @@
    <a href='https://yuexinma.me' target='_blank'>Yuexin Ma</a>&emsp;
     <br>
     ShanghaiTech University
-    The University of Hong Kong
-    Nanyang Technological University
-    The Chinese University of Hong Kong    
     <br>
+    The University of Hong Kong
+    <br>
+    Nanyang Technological University
+    <br>
+    The Chinese University of Hong Kong    
     <br>
   </p>
 </p>
