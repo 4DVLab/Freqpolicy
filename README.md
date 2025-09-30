@@ -31,7 +31,7 @@
 </p>
 </div>
 
->  We present DexGrasp Anything, consistently surpassing previous dexterous grasping generation methods across five benchmarks. Visualization of our method's results are shown on the left.
+>  (a) Heat maps of frequency band energy across action dimensions for different tasks.The top row shows Adroit tasks with high-dimensional actions (26 dimensions), while the bottom row presents Robomimic tasks with low-dimensional actions (10 dimensions). (b) Success rate of actions reconstructed with varying frequency ratios. We reconstruct action sequences using different proportions of frequency components and evaluate their success rates on the original tasks.
 
 <div align="center">
     <img src="image.png" alt="Directional Weight Score" class="blend-img-background center-image" style="max-width: 100%; height: auto;" />
