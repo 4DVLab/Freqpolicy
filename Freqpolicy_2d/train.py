@@ -9,7 +9,6 @@ import sys
 sys.stdout = open(sys.stdout.fileno(), mode='w', buffering=1)
 sys.stderr = open(sys.stderr.fileno(), mode='w', buffering=1)
 
-# 设置环境变量使wandb以离线模式运行
 import os
 os.environ['WANDB_MODE'] = 'offline'
 

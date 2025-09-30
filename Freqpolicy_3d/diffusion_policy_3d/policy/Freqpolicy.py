@@ -170,22 +170,13 @@ class Freqpolicy(BasePolicy):
         B = condition_data.shape[0]
         model = self.model
         with torch.no_grad():
-            if self.mask:
-                sampled_trajectory = model.sample_tokens_mask(
-                    bsz=B,
-                    num_iter=self.num_iter,
-                    conditions=global_cond,
-                    temperature=self.temperature,
-                    cfg=self.cfg
-                )
-            else:
-                sampled_trajectory = model.sample_tokens_nomask(
-                    bsz=B,
-                    num_iter=self.num_iter,
-                    conditions=global_cond,
-                    temperature=self.temperature,
-                    cfg=self.cfg
-                )
+            sampled_trajectory = model.sample_tokens_mask(
+                bsz=B,
+                num_iter=self.num_iter,
+                conditions=global_cond,
+                temperature=self.temperature,
+                cfg=self.cfg
+            )
         return sampled_trajectory
 
 

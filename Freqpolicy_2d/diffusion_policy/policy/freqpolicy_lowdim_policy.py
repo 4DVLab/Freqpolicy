@@ -10,7 +10,7 @@ from diffusion_policy.model.common.normalizer import LinearNormalizer
 from diffusion_policy.policy.base_lowdim_policy import BaseLowdimPolicy
 from diffusion_policy.model.diffusion.conditional_unet1d import ConditionalUnet1D
 from diffusion_policy.model.diffusion.mask_generator import LowdimMaskGenerator
-from diffusion_policy.model.far.far_ours import FAR
+from diffusion_policy.model.Freqpolicy.Freqpolicy import Freqpolicy
 from functools import partial
 from typing import Optional, Dict, Tuple, Union, List, Type
 import math
@@ -58,9 +58,9 @@ def create_mlp(
 
 
 
-class DiffusionFarLowdimPolicy(BaseLowdimPolicy):
+class FreqpolicyLowdimPolicy(BaseLowdimPolicy):
     def __init__(self, 
-            model: FAR, # new
+            model: Freqpolicy, # new
             noise_scheduler: DDPMScheduler,
             horizon, 
             obs_dim, 
@@ -122,19 +122,19 @@ class DiffusionFarLowdimPolicy(BaseLowdimPolicy):
         self.state_mlp_size = state_mlp_size
         self.mask_ratio_min = mask_ratio_min
         self.loss_weight = loss_weight
-        self.mask = mask # 是否使用mask
+        self.mask = mask # whether to use mask
         self.diffloss_d = diffloss_d
         self.diffloss_w = diffloss_w
         self.num_sampling_steps = num_sampling_steps
         self.diffusion_batch_mul = diffusion_batch_mul
-        self.temperature = temperature  # 采样温度
-        self.num_iter = num_iter  # 采样步数
+        self.temperature = temperature  # sampling temperature
+        self.num_iter = num_iter  # number of sampling steps
 
         # if num_inference_steps is None:
         #     num_inference_steps = noise_scheduler.config.num_train_timesteps
         # self.num_inference_steps = num_inference_steps
         
-        # # 设置新的obs_encoder, 这里只需要映射state, 所以就是一个简单的state_mlp
+        # # set new obs_encoder, only need to map state here, so it's a simple state_mlp
         # self.state_mlp_activation_fn = nn.ReLU
         # self.input_dim = self.obs_dim
         # self.output_dim = self.state_mlp_size
@@ -143,7 +143,7 @@ class DiffusionFarLowdimPolicy(BaseLowdimPolicy):
         
         # import pdb; pdb.set_trace()
         
-        self.model = FAR(
+        self.model = Freqpolicy(
             trajectory_dim=self.action_dim, # 10
             horizon=self.horizon,  # 16
             n_obs_steps=self.n_obs_steps, # 2
@@ -152,7 +152,7 @@ class DiffusionFarLowdimPolicy(BaseLowdimPolicy):
             diffloss_d=self.diffloss_d, # 3
             diffloss_w=self.diffloss_w, # 1024
             num_iter=self.num_iter, # 4
-            condition_dim= self.state_mlp_size, # 128 去掉了pointcloud的dimension, 如果是image的话可能需要加上
+            condition_dim= self.state_mlp_size, 
             num_sampling_steps=self.num_sampling_steps, # '100'
             diffusion_batch_mul=self.diffusion_batch_mul, # 4
             encoder_embed_dim=encoder_embed_dim, # 256
@@ -184,22 +184,13 @@ class DiffusionFarLowdimPolicy(BaseLowdimPolicy):
         B = condition_data.shape[0]
         model = self.model
         with torch.no_grad():
-            if self.mask:
-                sampled_trajectory = model.sample_tokens_mask(
-                    bsz=B,
-                    num_iter=self.num_iter,
-                    conditions=global_cond,
-                    temperature=self.temperature,
-                    cfg=self.cfg
-                )
-            else:
-                sampled_trajectory = model.sample_tokens_nomask(
-                    bsz=B,
-                    num_iter=self.num_iter,
-                    conditions=global_cond,
-                    temperature=self.temperature,
-                    cfg=self.cfg
-                )
+            sampled_trajectory = model.sample_tokens_mask(
+                bsz=B,
+                num_iter=self.num_iter,
+                conditions=global_cond,
+                temperature=self.temperature,
+                cfg=self.cfg
+            )
         return sampled_trajectory
 
 
@@ -293,7 +284,7 @@ class DiffusionFarLowdimPolicy(BaseLowdimPolicy):
         # import pdb; pdb.set_trace()
         assert 'valid_mask' not in batch
         nbatch = self.normalizer.normalize(batch)
-        # 以下的obs和action都是经过normalize过的
+        # the following obs and action are all normalized
         obs = nbatch['obs']
         action = nbatch['action']
         batch_size = action.shape[0]
@@ -301,8 +292,8 @@ class DiffusionFarLowdimPolicy(BaseLowdimPolicy):
 
         # handle different ways of passing observation
         global_cond = None
-        trajectory = action # 用的是normalize后的action
-        local_cond = None # frepolicy.py里是cond_data = trajectory
+        trajectory = action # using normalized action
+        local_cond = None 
         
         if self.obs_as_local_cond:
             # zero out observations after n_obs_steps
@@ -323,7 +314,6 @@ class DiffusionFarLowdimPolicy(BaseLowdimPolicy):
         
         conditions = global_cond     
         # with torch.cuda.amp.autocast():
-            # 在compute_loss这里有问题
         loss = self.model(trajectory, conditions, loss_weight=self.loss_weight)
         loss_value = loss.item()
         # if not math.isfinite(loss_value):

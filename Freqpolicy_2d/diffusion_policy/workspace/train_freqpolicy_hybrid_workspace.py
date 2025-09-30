@@ -14,28 +14,24 @@ from omegaconf import OmegaConf
 import pathlib
 from torch.utils.data import DataLoader
 import copy
-import numpy as np
 import random
 import wandb
 import tqdm
+import numpy as np
 import shutil
-import pdb
-
-from diffusion_policy.common.pytorch_util import dict_apply, optimizer_to
 from diffusion_policy.workspace.base_workspace import BaseWorkspace
-# change 5/3
-from diffusion_policy.policy.diffusion_far_lowdim_policy import DiffusionFarLowdimPolicy
-from diffusion_policy.dataset.base_dataset import BaseLowdimDataset
-from diffusion_policy.env_runner.base_lowdim_runner import BaseLowdimRunner
+from diffusion_policy.policy.freqpolicy_hybrid_image_policy import FreqpolicyHybridImagePolicy
+from diffusion_policy.dataset.base_dataset import BaseImageDataset
+from diffusion_policy.env_runner.base_image_runner import BaseImageRunner
 from diffusion_policy.common.checkpoint_util import TopKCheckpointManager
 from diffusion_policy.common.json_logger import JsonLogger
+from diffusion_policy.common.pytorch_util import dict_apply, optimizer_to
+from diffusion_policy.model.diffusion.ema_model import EMAModel
 from diffusion_policy.model.common.lr_scheduler import get_scheduler
-from diffusers.training_utils import EMAModel
 
 OmegaConf.register_new_resolver("eval", eval, replace=True)
 
-# %%
-class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
+class TrainFreqpolicyHybridWorkspace(BaseWorkspace):
     include_keys = ['global_step', 'epoch']
 
     def __init__(self, cfg: OmegaConf, output_dir=None):
@@ -48,10 +44,9 @@ class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
         random.seed(seed)
 
         # configure model
-        self.model: DiffusionFarLowdimPolicy
-        self.model = hydra.utils.instantiate(cfg.policy)
+        self.model: FreqpolicyHybridImagePolicy = hydra.utils.instantiate(cfg.policy)
 
-        self.ema_model: DiffusionUnetLowdimPolicy = None
+        self.ema_model: FreqpolicyHybridImagePolicy = None
         if cfg.training.use_ema:
             self.ema_model = copy.deepcopy(self.model)
 
@@ -59,6 +54,7 @@ class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
         self.optimizer = hydra.utils.instantiate(
             cfg.optimizer, params=self.model.parameters())
 
+        # configure training state
         self.global_step = 0
         self.epoch = 0
         self.best_val_loss = float('inf')
@@ -74,9 +70,9 @@ class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
                 self.load_checkpoint(path=lastest_ckpt_path)
 
         # configure dataset
-        dataset: BaseLowdimDataset
+        dataset: BaseImageDataset
         dataset = hydra.utils.instantiate(cfg.task.dataset)
-        assert isinstance(dataset, BaseLowdimDataset)
+        assert isinstance(dataset, BaseImageDataset)
         train_dataloader = DataLoader(dataset, **cfg.dataloader)
         normalizer = dataset.get_normalizer()
 
@@ -108,13 +104,12 @@ class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
                 cfg.ema,
                 model=self.ema_model)
 
-        # pdb.set_trace() # break point 这里env_runner出问题了
-        # configure env runner
-        env_runner: BaseLowdimRunner
+        # configure env
+        env_runner: BaseImageRunner
         env_runner = hydra.utils.instantiate(
             cfg.task.env_runner,
             output_dir=self.output_dir)
-        assert isinstance(env_runner, BaseLowdimRunner)
+        assert isinstance(env_runner, BaseImageRunner)
 
         # configure logging
         wandb_run = wandb.init(
@@ -164,13 +159,11 @@ class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
                         leave=False, mininterval=cfg.training.tqdm_interval_sec) as tepoch:
                     for batch_idx, batch in enumerate(tepoch):
                         # device transfer
-                        # import pdb; pdb.set_trace()
                         batch = dict_apply(batch, lambda x: x.to(device, non_blocking=True))
                         if train_sampling_batch is None:
                             train_sampling_batch = batch
 
                         # compute loss
-                        #import pdb; pdb.set_trace()
                         raw_loss = self.model.compute_loss(batch)
                         loss = raw_loss / cfg.training.gradient_accumulate_every
                         loss.backward()
@@ -206,7 +199,7 @@ class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
                         if (cfg.training.max_train_steps is not None) \
                             and batch_idx >= (cfg.training.max_train_steps-1):
                             break
-                
+
                 # at the end of each epoch
                 # replace train_loss with epoch average
                 train_loss = np.mean(train_losses)
@@ -220,12 +213,9 @@ class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
 
                 # run rollout
                 if (self.epoch % cfg.training.rollout_every) == 0:
-                    # 在这里就出问题了
                     runner_log = env_runner.run(policy)
                     # log all
-                    # import pdb; pdb.set_trace()
                     step_log.update(runner_log)
-                    
 
                 # run validation
                 if (self.epoch % cfg.training.val_every) == 0:
@@ -249,26 +239,14 @@ class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
                 if (self.epoch % cfg.training.sample_every) == 0:
                     with torch.no_grad():
                         # sample trajectory from training set, and evaluate difference
-                        # import pdb; pdb.set_trace()
-                        batch = train_sampling_batch
-                        obs_dict = {'obs': batch['obs']}
+                        batch = dict_apply(train_sampling_batch, lambda x: x.to(device, non_blocking=True))
+                        obs_dict = batch['obs']
                         gt_action = batch['action']
-                        # need to see why mse is 1000000?
-                        # import pdb; pdb.set_trace()
                         
                         result = policy.predict_action(obs_dict)
-                        if cfg.pred_action_steps_only:
-                            pred_action = result['action']
-                            start = cfg.n_obs_steps - 1
-                            end = start + cfg.n_action_steps
-                            gt_action = gt_action[:,start:end]
-                        else:
-                            pred_action = result['action_pred']
-                        
+                        pred_action = result['action_pred']
                         mse = torch.nn.functional.mse_loss(pred_action, gt_action)
-                        # log
                         step_log['train_action_mse_error'] = mse.item()
-                        # release RAM
                         del batch
                         del obs_dict
                         del gt_action
@@ -278,9 +256,8 @@ class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
                 
                 # checkpoint
                 if (self.epoch % cfg.training.checkpoint_every) == 0:
-                    # 需要改成每隔checkpoint_every个epoch保存一次checkpoint
-                    # 并且需要保存performance最好的checkpoint, 也就是score最高的那个
                     # checkpointing
+                    # checkpoint best 
                     mean_test_score = step_log["test/mean_score"]
                     mean_train_score = step_log["train/mean_score"]
                     self.save_checkpoint(f"{self.output_dir}/checkpoints/epoch={self.epoch}_test_score={mean_test_score:.3f}_train_score={mean_train_score:.3f}.ckpt")
@@ -302,14 +279,6 @@ class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
 
                     if topk_ckpt_path is not None:
                         self.save_checkpoint(path=topk_ckpt_path)
-
-                    # if 'val_loss' in step_log:
-                    #     if step_log['val_loss'] < self.best_val_loss:
-                    #         self.best_val_loss = step_log['val_loss']
-                    #         # 保存当前最优checkpoint
-                    #         best_ckpt_path = os.path.join(self.output_dir, 'checkpoints', 'best_val_loss.ckpt')
-                    #         self.save_checkpoint(path=best_ckpt_path)
-                    #         print(f"New best val_loss: {self.best_val_loss:.6f}, checkpoint saved to {best_ckpt_path}")
                 # ========= eval end for this epoch ==========
                 policy.train()
 
@@ -325,7 +294,7 @@ class TrainDiffusionFarLowdimWorkspace(BaseWorkspace):
     config_path=str(pathlib.Path(__file__).parent.parent.joinpath("config")), 
     config_name=pathlib.Path(__file__).stem)
 def main(cfg):
-    workspace = TrainDiffusionUnetLowdimWorkspace(cfg)
+    workspace = TrainFreqpolicyHybridWorkspace(cfg)
     workspace.run()
 
 if __name__ == "__main__":

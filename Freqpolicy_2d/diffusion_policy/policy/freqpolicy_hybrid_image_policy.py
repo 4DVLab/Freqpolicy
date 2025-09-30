@@ -18,14 +18,14 @@ import robomimic.models.base_nets as rmbn
 import diffusion_policy.model.vision.crop_randomizer as dmvc
 from diffusion_policy.common.pytorch_util import dict_apply, replace_submodules
 
-from diffusion_policy.model.far.far_ours import FAR
+from diffusion_policy.model.Freqpolicy.Freqpolicy import Freqpolicy
 from functools import partial
 from typing import Optional, Dict, Tuple, Union, List, Type
 import math
 import sys
 
 
-class DiffusionFarHybridImagePolicy(BaseImagePolicy):
+class FreqpolicyHybridImagePolicy(BaseImagePolicy):
     def __init__(self, 
             shape_meta: dict,
             noise_scheduler: DDPMScheduler,
@@ -152,7 +152,7 @@ class DiffusionFarHybridImagePolicy(BaseImagePolicy):
 
         # create diffusion model
         obs_feature_dim = obs_encoder.output_shape()[0]
-        input_dim = action_dim + obs_feature_dim # 这个用不上，因为我们是global_cond,所以下面会覆盖掉
+        input_dim = action_dim + obs_feature_dim 
         global_cond_dim = None
         if obs_as_global_cond:
             input_dim = action_dim
@@ -179,19 +179,19 @@ class DiffusionFarHybridImagePolicy(BaseImagePolicy):
         self.cfg = cfg
         self.mask_ratio_min = mask_ratio_min
         self.loss_weight = loss_weight
-        self.mask = mask # 是否使用mask
+        self.mask = mask # whether to use mask
         self.diffloss_d = diffloss_d
         self.diffloss_w = diffloss_w
         self.num_sampling_steps = num_sampling_steps
         self.diffusion_batch_mul = diffusion_batch_mul
-        self.temperature = temperature  # 采样温度
-        self.num_iter = num_iter  # 采样步数
+        self.temperature = temperature  # sampling temperature
+        self.num_iter = num_iter  # number of sampling steps
 
         # if num_inference_steps is None:
         #     num_inference_steps = noise_scheduler.config.num_train_timesteps
         # self.num_inference_steps = num_inference_steps
             
-        self.model = FAR(
+        self.model = Freqpolicy(
             trajectory_dim=self.action_dim, # 10
             horizon=self.horizon,  # 16
             n_obs_steps=self.n_obs_steps, # 2
@@ -200,9 +200,9 @@ class DiffusionFarHybridImagePolicy(BaseImagePolicy):
             diffloss_d=self.diffloss_d, # 3
             diffloss_w=self.diffloss_w, # 1024
             num_iter=self.num_iter, # 4
-            # 5/6 需要改成agent_pos + image_feature size, 也就是obs_encoder.output_shape
+
             condition_dim=self.obs_feature_dim,
-            # condition_dim= self.state_mlp_size, # 128 去掉了pointcloud的dimension, 如果是image的话可能需要加上
+            # condition_dim= self.state_mlp_size, 
             num_sampling_steps=self.num_sampling_steps, # '100'
             diffusion_batch_mul=self.diffusion_batch_mul, # 4
             encoder_embed_dim=encoder_embed_dim, # 256
@@ -231,22 +231,13 @@ class DiffusionFarHybridImagePolicy(BaseImagePolicy):
         B = condition_data.shape[0]
         model = self.model
         with torch.no_grad():
-            if self.mask:
-                sampled_trajectory = model.sample_tokens_mask(
-                    bsz=B,
-                    num_iter=self.num_iter,
-                    conditions=global_cond,
-                    temperature=self.temperature,
-                    cfg=self.cfg
-                )
-            else:
-                sampled_trajectory = model.sample_tokens_nomask(
-                    bsz=B,
-                    num_iter=self.num_iter,
-                    conditions=global_cond,
-                    temperature=self.temperature,
-                    cfg=self.cfg
-                )
+            sampled_trajectory = model.sample_tokens_mask(
+                bsz=B,
+                num_iter=self.num_iter,
+                conditions=global_cond,
+                temperature=self.temperature,
+                cfg=self.cfg
+            )
         return sampled_trajectory
 
 
@@ -350,7 +341,6 @@ class DiffusionFarHybridImagePolicy(BaseImagePolicy):
             
         conditions = global_cond     
         # with torch.cuda.amp.autocast():
-            # 在compute_loss这里有问题
         loss = self.model(trajectory, conditions, loss_weight=self.loss_weight)
         loss_value = loss.item()
         # if not math.isfinite(loss_value):
