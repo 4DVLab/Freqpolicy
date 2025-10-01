@@ -48,17 +48,35 @@ Please refer to our [homepage](https://freq-policy.github.io/) for more thrillin
 
 Our method provides separate implementations for 2D and 3D inputs, built upon existing frameworks:
 
-- 📁 **2D Version** → [`Freqpolicy_2d/`](Freqpolicy_2d/)
-  - Based on [Diffusion Policy (DP)](https://github.com/real-stanford/diffusion_policy) framework
-  - Follow the environment setup in DP and complete a few additional installation steps
-  - See [Freqpolicy_2d/README.md](Freqpolicy_2d/README.md) for details
+### 📁 2D Version → [`Freqpolicy_2d/`](Freqpolicy_2d/)
 
-- 📁 **3D Version** → [`Freqpolicy_3d/`](Freqpolicy_3d/)
-  - Based on [Diffusion Policy 3D (DP3)](https://github.com/YanjieZe/3D-Diffusion-Policy) framework
-  - Follow the environment setup in DP3 and complete a few additional installation steps
-  - See [Freqpolicy_3d/README.md](Freqpolicy_3d/README.md) for details
+Based on [Diffusion Policy (DP)](https://github.com/real-stanford/diffusion_policy) framework.
 
-Please navigate to the corresponding directory and follow its README for detailed installation instructions.
+**Installation Steps:**
+
+1. Follow the [environment setup instructions in the original DP repository](https://github.com/real-stanford/diffusion_policy?tab=readme-ov-file#%EF%B8%8F-installation)
+
+2. Install additional dependencies:
+```bash
+pip install tensorboard==2.10.1
+pip install huggingface-hub==0.25.2
+pip install torch-dct==0.1.6
+```
+
+### 📁 3D Version → [`Freqpolicy_3d/`](Freqpolicy_3d/)
+
+Based on [Diffusion Policy 3D (DP3)](https://github.com/YanjieZe/3D-Diffusion-Policy) framework.
+
+**Installation Steps:**
+
+1. Follow the [environment setup instructions in the original DP3 repository](https://github.com/YanjieZe/3D-Diffusion-Policy?tab=readme-ov-file#installation)
+
+2. Install additional dependencies:
+```bash
+pip install tensorboard==2.14.0
+pip install huggingface-hub==0.25.2
+pip install torch-dct==0.1.6
+```
 
 ## 🚀 Training & Evaluation
 
@@ -111,7 +129,7 @@ bash scripts/eval_policy.sh Freqpolicy adroit_pen 0428 0 0
 
 ## 🎫 License
 
-This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
+For academic use, this project is licensed under [the 2-clause BSD License](https://opensource.org/license/bsd-2-clause). 
 
 ## 💓 Acknowledgement
 

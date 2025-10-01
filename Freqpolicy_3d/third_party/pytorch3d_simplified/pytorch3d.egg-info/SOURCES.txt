@@ -2,6 +2,9 @@ setup.py
 /inspurfs/group/mayuexin/zym/AR_model/DCT_Frequency_action/third_party/pytorch3d_simplified/pytorch3d/csrc/ext.cpp
 /inspurfs/group/mayuexin/zym/AR_model/DCT_Frequency_action/third_party/pytorch3d_simplified/pytorch3d/csrc/sample_farthest_points/sample_farthest_points.cu
 /inspurfs/group/mayuexin/zym/AR_model/DCT_Frequency_action/third_party/pytorch3d_simplified/pytorch3d/csrc/sample_farthest_points/sample_farthest_points_cpu.cpp
+/storage/data/zym1525742497/Freqpolicy/Freqpolicy_3d/third_party/pytorch3d_simplified/pytorch3d/csrc/ext.cpp
+/storage/data/zym1525742497/Freqpolicy/Freqpolicy_3d/third_party/pytorch3d_simplified/pytorch3d/csrc/sample_farthest_points/sample_farthest_points.cu
+/storage/data/zym1525742497/Freqpolicy/Freqpolicy_3d/third_party/pytorch3d_simplified/pytorch3d/csrc/sample_farthest_points/sample_farthest_points_cpu.cpp
 pytorch3d/__init__.py
 pytorch3d.egg-info/PKG-INFO
 pytorch3d.egg-info/SOURCES.txt
