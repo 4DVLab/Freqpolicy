@@ -4,7 +4,7 @@ The following guidance works well for a machine with 3090/A40/A800/A100 GPU, cud
 
 First, git clone this repo and `cd` into it.
 
-    git clone https://github.com/YanjieZe/3D-Diffusion-Policy.git
+    git clone git@github.com:ymzhong66/Freqpolicy.git
 
 
 **Please strictly follow the guidance to avoid any potential errors. Especially, make sure Gym version is the same.**
