@@ -111,7 +111,7 @@ bash scripts/eval_policy.sh Freqpolicy adroit_pen 0428 0 0
 
 ## 🎫 License
 
-For academic use, this project is licensed under [the 2-clause BSD License](https://opensource.org/license/bsd-2-clause). 
+This project is licensed under the [MIT License](https://opensource.org/licenses/MIT).
 
 ## 💓 Acknowledgement
 
