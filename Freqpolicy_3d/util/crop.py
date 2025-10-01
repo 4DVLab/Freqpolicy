@@ -1,5 +1,5 @@
 import numpy as np
-from PIL import Image
+from PIL import 
 
 
 def center_crop_arr(pil_image, image_size):

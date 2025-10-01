@@ -169,7 +169,6 @@ class FreqpolicyLowdimPolicy(BaseLowdimPolicy):
         print("Number of trainable parameters: {}M".format(n_params / 1e6))
         # print_params(self)
         print('self.num_iter', self.num_iter)
-        print('self.cfg', self.cfg)
         
     
     # ========= inference  ============
