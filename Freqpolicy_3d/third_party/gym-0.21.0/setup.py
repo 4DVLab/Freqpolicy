@@ -14,8 +14,8 @@ extras = {
     "accept-rom-license": ["autorom[accept-rom-license]~=0.4.2"],
     "box2d": ["box2d-py==2.3.5", "pyglet>=1.4.0"],
     "classic_control": ["pyglet>=1.4.0"],
-    "mujoco": ["mujoco_py>=1.50,<2.0"],
-    "robotics": ["mujoco_py>=1.50,<2.0"],
+    "mujoco": ["mujoco_py>=1.50, <2.0"],
+    "robotics": ["mujoco_py>=1.50, <2.0"],
     "toy_text": ["scipy>=1.4.1"],
     "other": ["lz4>=3.1.0", "opencv-python>=3.0"],
 }
@@ -27,6 +27,7 @@ nomujoco_groups = set(extras.keys()) - nomujoco_blacklist
 extras["nomujoco"] = list(
     itertools.chain.from_iterable(map(lambda group: extras[group], nomujoco_groups))
 )
+
 
 all_blacklist = set(["accept-rom-license"])
 all_groups = set(extras.keys()) - all_blacklist
@@ -63,6 +64,7 @@ setup(
             "envs/robotics/assets/textures/*.png",
         ]
     },
+    tests_require=["pytest", "mock"],
     python_requires=">=3.6",
     classifiers=[
         "Programming Language :: Python :: 3",
