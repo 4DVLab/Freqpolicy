@@ -54,7 +54,7 @@ Our method provides separate implementations for 2D and 3D inputs, built upon ex
   - See [Freqpolicy_2d/README.md](Freqpolicy_2d/README.md) for details
 
 - 📁 **3D Version** → [`Freqpolicy_3d/`](Freqpolicy_3d/)
-  - Based on [DP3](https://github.com/YanjieZe/3D-Diffusion-Policy) framework
+  - Based on [Diffusion Policy 3D (DP3)](https://github.com/YanjieZe/3D-Diffusion-Policy) framework
   - Follow the environment setup in DP3 and complete a few additional installation steps
   - See [Freqpolicy_3d/README.md](Freqpolicy_3d/README.md) for details
 
