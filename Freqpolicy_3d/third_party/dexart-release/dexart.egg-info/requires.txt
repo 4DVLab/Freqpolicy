@@ -1,4 +1,0 @@
-transforms3d
-sapien==2.2.1
-numpy
-open3d>=0.15.1
