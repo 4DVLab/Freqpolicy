@@ -43,7 +43,7 @@
 ## 😲 Results
 Please refer to our [homepage](https://freq-policy.github.io/) for more thrilling results!
 
-
+ 
 ## 🛠️ Setup
 
 Our method provides separate implementations for 2D and 3D inputs, built upon existing frameworks:
