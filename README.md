@@ -38,7 +38,7 @@
 </div>
 
 ## 📣 News
-- [2/27/2025] 🎉🎉🎉FreqPolicy has been accepted by NeurIPS 2025!!!🎉🎉🎉
+- [9/20/2025] 🎉🎉🎉FreqPolicy has been accepted by NeurIPS 2025!!!🎉🎉🎉
 
 ## 😲 Results
 Please refer to our [homepage](https://freq-policy.github.io/) for more thrilling results!
